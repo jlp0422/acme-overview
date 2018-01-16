@@ -49,35 +49,54 @@ var lineItems = [
 //keys are the ids of products
 //the values are the products themselves
 function generateProductsMap(products) {
-	var output = {}
-	var prodId
-	for (var key in products) {
-		prodId = products[key].id
-		output[prodId] = products[key]
-		prodId++
-	}
-	return output
+	// better solution using reduce after re-factoring
+	return products.reduce(function(object, currentValue, currentIndex) {
+		object[products[currentIndex].id] = currentValue
+		return object
+	}, {})
+	// var output = {}
+	// var prodId
+	// for (var key in products) {
+	// 	prodId = products[key].id
+	// 	output[prodId] = products[key]
+	// 	prodId++
+	// }
+	// return output
 }
 
 //returns an object
 //keys are the ids of products
 //value is the total revenue for that product
 function salesByProduct(products, lineItems) {
-	var output = {}
-	var prodId
+	// refactored to use reduce method
 	var prods = generateProductsMap(products)
-	for (var key in lineItems) {
-		prodId = lineItems[key].productId
-		if (!output[prodId]) {
-			output[prodId] = lineItems[key].quantity
-		} else {
-			output[prodId] = (output[prodId] + lineItems[key].quantity)
+	var prodId
+	return lineItems.reduce(function(object, currentValue, currentIndex) {
+		prodId = lineItems[currentIndex].productId
+		if (!object[prodId]) {
+			object[prodId] = lineItems[currentIndex].quantity * prods[prodId].price
 		}
-	}
-	for (var prod in output) {
-		output[prod] = output[prod]*prods[prod].price
-	}
-	return output
+		else {
+			object[prodId] = object[prodId] + lineItems[currentIndex].quantity * prods[prodId].price
+		}
+ 		return object
+	}, {})
+
+	// var output = {}
+	// var prodId
+	// var prods = generateProductsMap(products)
+	// for (var key in lineItems) {
+	// 	prodId = lineItems[key].productId
+	// 	if (!output[prodId]) {
+	// 		output[prodId] = lineItems[key].quantity
+	// 	} else {
+	// 		output[prodId] = (output[prodId] + lineItems[key].quantity)
+	// 	}
+	// }
+	// for (var prod in output) {
+	// 	output[prod] = output[prod]*prods[prod].price
+	// }
+	// return output
 }
 
 //return the total revenue for all products
