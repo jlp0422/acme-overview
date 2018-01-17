@@ -73,12 +73,8 @@ function salesByProduct(products, lineItems) {
 	var prodId
 	return lineItems.reduce(function(object, currentValue, currentIndex) {
 		prodId = lineItems[currentIndex].productId
-		if (!object[prodId]) {
-			object[prodId] = lineItems[currentIndex].quantity * prods[prodId].price
-		}
-		else {
-			object[prodId] = object[prodId] + lineItems[currentIndex].quantity * prods[prodId].price
-		}
+		if (!object[prodId]) object[prodId] = lineItems[currentIndex].quantity * prods[prodId].price
+		else object[prodId] = object[prodId] + lineItems[currentIndex].quantity * prods[prodId].price
  		return object
 	}, {})
 
